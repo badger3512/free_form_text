@@ -1,4 +1,5 @@
 part of '../free_form_text.dart';
+
 /// Compute a smooth cubic bezier curve
 class CubicBezier {
   Map<int, List<InterpolationPoint>> lookup = {};
@@ -247,12 +248,14 @@ class CubicBezier {
     return smoothCoords;
   }
 }
+
 /// An interpolation value holding control points
 class InterpolationPoint {
   List<double> t = List<double>.filled(4, 0.0);
   double tsum = 0.0;
   InterpolationPoint();
 }
+
 /// Smoother control class
 class SmootherControl {
   int numVertices = 10;

@@ -16,9 +16,3 @@ part 'src/styled_character.dart';
 part 'src/offset_util.dart';
 part 'src/smooth.dart';
 part 'src/free_form_text_exception.dart';
-
-
-
-
-
-

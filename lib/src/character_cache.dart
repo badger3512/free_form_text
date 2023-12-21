@@ -1,4 +1,5 @@
 part of '../free_form_text.dart';
+
 /// Cache for [StyledCharacter]. Characters are cached, based on their codepoint and associated [TextStyle].
 class CharacterCache {
   Map<int, StyledCharacter> map = {};
@@ -27,5 +28,6 @@ class CharacterCache {
     return map[char.hashCode];
   }
 }
+
 /// Singleton [CharacterCache]
 final cache = CharacterCache();

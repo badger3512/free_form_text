@@ -1,8 +1,10 @@
 part of '../free_form_text.dart';
+
 /// Paints styled characters to a [Canvas]. Should be invoked from a [CustomPainter]
 class FreeFormTextPainter {
   final ui.Canvas canvas;
   FreeFormTextPainter(this.canvas);
+
   /// Paint a character at a given location
   void _paintCharacter(StyledCharacter char, ui.Offset offset) {
     canvas.save();
@@ -15,13 +17,14 @@ class FreeFormTextPainter {
               char.image!.height.toDouble()),
           image: char.image!);
     } catch (e) {
-      if(kDebugMode) {
+      if (kDebugMode) {
         print(e.toString());
       }
       canvas.restore();
     }
     canvas.restore();
   }
+
   /// Paint a line of text beginning at a given location and at a specified angle
   void paintText(
       {required FreeFormText text,
@@ -40,6 +43,7 @@ class FreeFormTextPainter {
     }
     canvas.restore();
   }
+
   /// Paint text along a specified path. Closed paths, e.g. first and last points are equal
   /// are treated as a special case.
   void paintTextAlongPath(FreeFormText text, List<ui.Offset> path,
