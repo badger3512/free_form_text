@@ -1,10 +1,10 @@
 part of '../free_form_text.dart';
-/// Paints character to a [Canvas]. Should be invoked from a [CustomPainter]
+/// Paints styled characters to a [Canvas]. Should be invoked from a [CustomPainter]
 class FreeFormTextPainter {
   final ui.Canvas canvas;
   FreeFormTextPainter(this.canvas);
   /// Paint a character at a given location
-  void paintCharacter(StyledCharacter char, ui.Offset offset) {
+  void _paintCharacter(StyledCharacter char, ui.Offset offset) {
     canvas.save();
     final height = char.image!.height;
     canvas.translate(offset.dx, offset.dy - height);
@@ -33,7 +33,7 @@ class FreeFormTextPainter {
     canvas.rotate(-angle * degrees2Radians);
     for (var i = 0; i < text.buffer.length; i++) {
       var currentChar = text.buffer[i];
-      paintCharacter(currentChar, currentOffset);
+      _paintCharacter(currentChar, currentOffset);
       var spacing = currentChar.mStyle.letterSpacing ?? 0.0;
       currentOffset = currentOffset.translate(
           currentChar.image!.width.toDouble() + spacing, 0.0);
@@ -69,7 +69,7 @@ class FreeFormTextPainter {
                 OffsetUtility.offsetAngle(bracketList[0], bracketList[1]);
             canvas.translate(postOffset.dx, postOffset.dy);
             canvas.rotate(angle * degrees2Radians);
-            paintCharacter(currentChar, const ui.Offset(0.0, 0.0));
+            _paintCharacter(currentChar, const ui.Offset(0.0, 0.0));
             canvas.restore();
             final spacing = currentChar.mStyle.letterSpacing ?? 0.0;
             final char = String.fromCharCode(currentChar.codePoint);
