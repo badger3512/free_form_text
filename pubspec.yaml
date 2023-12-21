@@ -1,7 +1,8 @@
 name: free_form_text
-description: Library to implement painting free form text to a Canvas.
-version: 0.3.1
-
+description: Library to implement painting styled, free form text to a Canvas.
+version: 0.4.1
+homepage: https://github.com/badger3512/free_form_text
+issue_tracker: https://github.com/badger3512/free_form_text/issues
 environment:
   sdk: '>=3.1.5 <4.0.0'
   flutter: ">=1.17.0"
