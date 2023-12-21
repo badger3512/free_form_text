@@ -1,8 +1,9 @@
 part of '../free_form_text.dart';
-
+/// Paints character to a [Canvas]. Should be invoked from a [CustomPainter]
 class FreeFormTextPainter {
   final ui.Canvas canvas;
   FreeFormTextPainter(this.canvas);
+  /// Paint a character at a given location
   void paintCharacter(StyledCharacter char, ui.Offset offset) {
     canvas.save();
     final height = char.image!.height;
@@ -14,16 +15,18 @@ class FreeFormTextPainter {
               char.image!.height.toDouble()),
           image: char.image!);
     } catch (e) {
-      print(e.toString());
+      if(kDebugMode) {
+        print(e.toString());
+      }
       canvas.restore();
     }
     canvas.restore();
   }
-
-  Future<void> paintText(
+  /// Paint a line of text beginning at a given location and at a specified angle
+  void paintText(
       {required FreeFormText text,
       required ui.Offset offset,
-      double angle = 0.0}) async {
+      double angle = 0.0}) {
     var currentOffset = const ui.Offset(0.0, 0.0);
     canvas.save();
     canvas.translate(offset.dx, offset.dy);
@@ -34,45 +37,11 @@ class FreeFormTextPainter {
       var spacing = currentChar.mStyle.letterSpacing ?? 0.0;
       currentOffset = currentOffset.translate(
           currentChar.image!.width.toDouble() + spacing, 0.0);
-      // cosAngle * (currentChar.image!.width.toDouble() + spacing),
-      // sinAngle * (currentChar.image!.height.toDouble()));
     }
     canvas.restore();
   }
-
-  ui.TextStyle convert2UiStyle(m.TextStyle mStyle) {
-    return ui.TextStyle(
-        color: mStyle.color,
-        decoration: mStyle.decoration,
-        decorationColor: mStyle.decorationColor,
-        decorationStyle: mStyle.decorationStyle,
-        decorationThickness: mStyle.decorationThickness,
-        fontWeight: mStyle.fontWeight,
-        fontStyle: mStyle.fontStyle,
-        textBaseline: mStyle.textBaseline,
-        fontFamily: mStyle.fontFamily,
-        fontFamilyFallback: mStyle.fontFamilyFallback,
-        fontSize: mStyle.fontSize,
-        letterSpacing: mStyle.letterSpacing,
-        wordSpacing: mStyle.wordSpacing,
-        height: mStyle.height,
-        leadingDistribution: mStyle.leadingDistribution,
-        locale: mStyle.locale,
-        background: mStyle.background,
-        foreground: mStyle.foreground,
-        shadows: mStyle.shadows,
-        fontFeatures: mStyle.fontFeatures,
-        fontVariations: mStyle.fontVariations);
-  }
-
-  double fetchMaxWidth(List<StyledCharacter> text) {
-    int width = -999;
-    for (var char in text) {
-      width = math.max(width, char.image!.width);
-    }
-    return width.toDouble();
-  }
-
+  /// Paint text along a specified path. Closed paths, e.g. first and last points are equal
+  /// are treated as a special case.
   void paintTextAlongPath(FreeFormText text, List<ui.Offset> path,
       [bool lenient = false]) {
     final pathLength = OffsetUtility.pathLength(path);

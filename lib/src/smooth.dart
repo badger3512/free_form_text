@@ -1,12 +1,11 @@
 part of '../free_form_text.dart';
-
+/// Compute a smooth cubic bezier curve
 class CubicBezier {
   Map<int, List<InterpolationPoint>> lookup = {};
   final control = SmootherControl();
   CubicBezier();
 
   /// Calculates a pair of Bezier control points for each vertex in an array of ui.Offsets
-  ///
   List<List<ui.Offset>> _getLineControlPoints(
       List<ui.Offset> coordinates, double alpha) {
     if (alpha < 0.0 || alpha > 1.0) {
@@ -14,13 +13,13 @@ class CubicBezier {
     }
 
     final int n = coordinates.length;
-    final ctrl = List<List<ui.Offset>>.empty(growable:true);
-    for(int i=0;i<n;i++){
-      ctrl.add(List.empty(growable:true));
+    final ctrl = List<List<ui.Offset>>.empty(growable: true);
+    for (int i = 0; i < n; i++) {
+      ctrl.add(List.empty(growable: true));
     }
 
-    final v = List<ui.Offset>.filled(3, ui.Offset(0.0,0.0));
-    final mid = List<ui.Offset>.filled(2, ui.Offset(0.0,0.0));
+    final v = List<ui.Offset>.filled(3, const ui.Offset(0.0, 0.0));
+    final mid = List<ui.Offset>.filled(2, const ui.Offset(0.0, 0.0));
 
     var anchor = ui.Offset.zero;
     final vDistance = List.filled(2, 0.0);
@@ -37,7 +36,7 @@ class CubicBezier {
     vDistance[1] = OffsetUtility.offsetDistance(v[1], v[2]);
 
     for (int i = 0; i < n; i++) {
-      List<ui.Offset> l1 = List<ui.Offset>.empty(growable:true);
+      List<ui.Offset> l1 = List<ui.Offset>.empty(growable: true);
       v[0] = v[1];
       v[1] = v[2];
       v[2] = (i < n - 1 ? coordinates[i + 1] : vN);
@@ -69,17 +68,15 @@ class CubicBezier {
     return ctrl;
   }
 
-  ///
   /// Calculates a pair of Bezier control points for each vertex in an array of ui.Offsets
-  ///
   List<List<ui.Offset>> _getRingControlPoints(
       List<ui.Offset> coordinates, int n, double alpha) {
     if (alpha < 0.0 || alpha > 1.0) {
       throw Exception("alpha must be a value between 0 and 1 inclusive");
     }
-    final ctrl = List<List<ui.Offset>>.empty(growable:true);
-    for(int i=0;i<n;i++){
-      ctrl.add(List.empty(growable:true));
+    final ctrl = List<List<ui.Offset>>.empty(growable: true);
+    for (int i = 0; i < n; i++) {
+      ctrl.add(List.empty(growable: true));
     }
     final v = List<ui.Offset>.filled(3, ui.Offset.zero);
     final mid = List<ui.Offset>.filled(2, ui.Offset.zero);
@@ -92,7 +89,7 @@ class CubicBezier {
     vDistance[1] = OffsetUtility.offsetDistance(v[1], v[2]);
 
     for (int i = 0; i < n; i++) {
-      List<ui.Offset> l1 = List<ui.Offset>.empty(growable:true);
+      List<ui.Offset> l1 = List<ui.Offset>.empty(growable: true);
       v[0] = v[1];
       v[1] = v[2];
       v[2] = coordinates[(i + 1) % n];
@@ -126,7 +123,6 @@ class CubicBezier {
 
   /// Calculates vertices along a cubic Bezier curve given start point, end point and two control
   /// points.
-  ///
   List<ui.Offset> _cubicBezier(final ui.Offset start, final ui.Offset end,
       final ui.Offset ctrl1, final ui.Offset ctrl2, final int nv) {
     final curve = List<ui.Offset>.filled(nv, ui.Offset.zero);
@@ -155,7 +151,6 @@ class CubicBezier {
 
   /// Gets the interpolation parameters for a Bezier curve approximated by the given number of
   /// vertices.
-  ///
   List<InterpolationPoint> _getInterpolationPoints(int numPoints) {
     List<InterpolationPoint>? ref = lookup[numPoints];
     List<InterpolationPoint>? ip;
@@ -184,6 +179,8 @@ class CubicBezier {
     return ip;
   }
 
+  /// Creates a new line which is a smoothed version of the input.
+  /// Handles open and closed paths
   List<ui.Offset> smooth(List<ui.Offset> coordinates, double alpha) {
     if (coordinates.first != coordinates.last) {
       return _smoothLine(coordinates, alpha);
@@ -193,7 +190,6 @@ class CubicBezier {
   }
 
   /// Creates a new line which is a smoothed version of the input.
-  ///
   List<ui.Offset> _smoothLine(List<ui.Offset> ls, double alpha) {
     var coordinates = ls;
 
@@ -223,9 +219,7 @@ class CubicBezier {
     return smoothCoordinates;
   }
 
-  ///
   /// Creates a smoothed version of the input ring (line with equal first and last points)
-  ///
   List<ui.Offset> _smoothRing(List<ui.Offset> coordinates, double alpha) {
     final n = coordinates.length - 1;
 
@@ -253,13 +247,13 @@ class CubicBezier {
     return smoothCoords;
   }
 }
-
+/// An interpolation value holding control points
 class InterpolationPoint {
   List<double> t = List<double>.filled(4, 0.0);
   double tsum = 0.0;
   InterpolationPoint();
 }
-
+/// Smoother control class
 class SmootherControl {
   int numVertices = 10;
   double minLength = 0.0;

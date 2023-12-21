@@ -1,8 +1,9 @@
 part of '../free_form_text.dart';
 
 const double degrees2Radians = math.pi / 180.0;
-
+/// Stateless utility class implementing [Offset] operations
 class OffsetUtility {
+  /// Perform 2D interpolation into a path
   static ui.Offset? linearInterpolation2D(List<ui.Offset> path, double dist) {
     if (path.length < 2 || pathLength(path) < dist) {
       return null;
@@ -26,13 +27,13 @@ class OffsetUtility {
     }
     return null;
   }
-
+  /// Compute the distance between to [Offset] points
   static double offsetDistance(ui.Offset p1, ui.Offset p2) {
     var dx = p2.dx - p1.dx;
     var dy = p2.dy - p1.dy;
     return math.sqrt(dx * dx + dy * dy);
   }
-
+  /// Compute the length (distance) of a path
   static double pathLength(List<ui.Offset> path) {
     if (path.length < 2) {
       return 0.0;
@@ -43,7 +44,7 @@ class OffsetUtility {
     }
     return sum;
   }
-
+  /// Determine the two [Offset] points that fall on either side a given point
   static List<ui.Offset> bracketOffset(List<ui.Offset> path, ui.Offset offset) {
     List<ui.Offset> bracketList = List.empty(growable: true);
     for (var i = 1; i < path.length; i++) {
@@ -58,7 +59,7 @@ class OffsetUtility {
     }
     return bracketList;
   }
-
+  /// Determine the indices of the two [Offset] points that fall on either side a given point
   static List<int> bracketOffsetIndex(List<ui.Offset> path, ui.Offset offset) {
     List<int> bracketList = List.empty(growable: true);
     for (var i = 1; i < path.length; i++) {
@@ -73,12 +74,13 @@ class OffsetUtility {
     }
     return bracketList;
   }
+  /// Compute the angle between two points
   static double offsetAngle(ui.Offset p1, ui.Offset p2) {
     var dx = p2.dx - p1.dx;
     var dy = p2.dy - p1.dy;
     return math.atan2(dy, dx) / degrees2Radians;
   }
-
+  /// Compute the distance along a path to a given point
   static double distanceAlongPath(List<ui.Offset> path, ui.Offset offset) {
     var sum = 0.0;
     if (offset == path[0]) {

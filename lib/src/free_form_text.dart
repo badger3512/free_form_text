@@ -1,21 +1,25 @@
 part of '../free_form_text.dart';
 
+/// The basis for a [StyledCharacter] string. (Not a widget)
 class FreeFormText {
   final List<StyledCharacter> buffer = List.empty(growable: true);
-  bool isBuilt = false;
+  bool _isBuilt = false;
   String label;
   m.TextStyle? style;
   m.BuildContext context;
+
+  /// Constructor for styled text. If style if omitted, the context default is assumed
   FreeFormText({required this.label, required this.context, this.style}) {
     style ??= m.DefaultTextStyle.of(context).style;
   }
 
+  /// Layout the text string by establishing bit mapped representations for the runes.
   Future<FreeFormText> layout() async {
     for (var code in label.runes) {
       var char = StyledCharacter(code, style!);
       StyledCharacter? test = cache.get(char);
       if (test == null) {
-        char.image = await createImage(char);
+        char.image = await _createImage(char);
         cache.put(char);
         buffer.add(char);
       } else {
@@ -23,42 +27,38 @@ class FreeFormText {
         buffer.add(char);
       }
     }
-    isBuilt = true;
+    _isBuilt = true;
     return this;
   }
 
-  double textLength(){
+  /// Compute the length of the laid-out text string
+  double textLength() {
     double length = 0.0;
-    if(!isBuilt){
+    if (!_isBuilt) {
       return length;
     }
-    for(StyledCharacter char in buffer){
+    for (StyledCharacter char in buffer) {
       var spacing = char.mStyle.letterSpacing ?? 0.0;
       length += (char.image!.width + spacing);
     }
     return length;
   }
 
-  Future<ui.Image?> createImage(StyledCharacter char) async {
+  /// Create a bit map image for the represented character
+  Future<ui.Image?> _createImage(StyledCharacter char) async {
     final str = String.fromCharCode(char.codePoint);
-    var oldStyle = char.mStyle;
-    ui.TextStyle style = ui.TextStyle(
-        color: oldStyle.color,
-        fontStyle: oldStyle.fontStyle,
-        fontSize: oldStyle.fontSize,
-        fontFamily: oldStyle.fontFamily,
-        letterSpacing: oldStyle.letterSpacing);
     final textSpan = m.TextSpan(
       text: str,
       style: char.mStyle,
     );
-    final tp = m.TextPainter(text: textSpan, textDirection: ui.TextDirection.ltr);
+    final tp =
+        m.TextPainter(text: textSpan, textDirection: ui.TextDirection.ltr);
     tp.layout();
     var width = tp.width;
     var height = tp.height;
     tp.dispose();
     var builder = ui.ParagraphBuilder(char.mStyle.getParagraphStyle());
-    builder.pushStyle(style);
+    builder.pushStyle(char.style);
     builder.addText(str);
     ui.Paragraph paragraph = builder.build();
     paragraph.layout(const ui.ParagraphConstraints(width: 100));

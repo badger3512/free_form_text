@@ -1,22 +1,28 @@
 part of '../free_form_text.dart';
-
+/// Styled character representation.
 class StyledCharacter {
+  /// The character codepoint
   int codePoint;
+  /// The [ui.TextStyle] style
   late ui.TextStyle style;
+  /// The [painting.TextStyle] style
   m.TextStyle mStyle;
+  /// The bit map image for the character and style
   ui.Image? image;
   StyledCharacter(this.codePoint, this.mStyle) {
-    style = convert2UiStyle(mStyle);
+    style = _convert2UiStyle(mStyle);
   }
+  /// Hash code used for the [CharacterCache]
   @override
   int get hashCode => codePoint.hashCode + style.hashCode;
 
+  /// Equals override use for the [CharacterCache]
   @override
   bool operator ==(Object other) {
     return hashCode == other.hashCode;
   }
-
-  ui.TextStyle convert2UiStyle(m.TextStyle mStyle) {
+  /// Convert from a [m.TextStyle] to a [ui.TextStyle]
+  ui.TextStyle _convert2UiStyle(m.TextStyle mStyle) {
     return ui.TextStyle(
         color: mStyle.color,
         decoration: mStyle.decoration,

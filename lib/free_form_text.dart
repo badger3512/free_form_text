@@ -1,12 +1,11 @@
+/// Library to implement painting styled, free form text to a Canvas.
 library free_form_text;
-/// Entry point for the free_form_text library.
-
 
 import 'dart:async';
 import 'dart:math' as math;
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'dart:io' as io;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as m;
 import 'package:path_provider/path_provider.dart';
 
