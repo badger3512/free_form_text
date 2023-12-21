@@ -3,7 +3,7 @@
 An API for painting styled text to 
 a [Canvas](https://api.flutter.dev/flutter/dart-ui/Canvas-class.html).
 
-Text is styled with the [TextStyle](https://api.flutter.dev/flutter/dart-ui/TextStyle-class.html) class and can be painted at any arbitrary angle as well as along a defined path.
+Text is styled with the [TextStyle](https://api.flutter.dev/flutter/dart-ui/TextStyle-class.html) class and can be painted at any arbitrary angle as well as along a defined path. The API should be useful for applications that require angled and free form text such as games or GIS mapping.
 
 ## Features
 
@@ -13,14 +13,19 @@ Text is styled with the [TextStyle](https://api.flutter.dev/flutter/dart-ui/Text
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
+To use this plugin, add `free_form_text` as a dependency in your pubspec.yaml file. For example:
+```yaml
+dependencies:
+  free_form_text: '^0.4.1'
+```
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+To apply the API, import package:free_form_text/free_form_text.dart, create a Future<FreeFormText\> and use it in a FutureBuilder that includes
+a [CustomPaint](https://api.flutter.dev/flutter/widgets/CustomPaint-class.html) 
+widget as illustrated below. The actual painting is done in a 
+[CustomPainter](https://api.flutter.dev/flutter/rendering/CustomPainter-class.html).
 
+Create a FreeFormText object:
 ```dart
     FreeFormText text = FreeFormText(
         label: 'Lorem ipsum dolor sit amet.',
@@ -31,38 +36,13 @@ to `/example` folder.
             wordSpacing: 2.0,
             letterSpacing: 0.5,
             fontWeight: FontWeight.bold));
-    textFuture = text.layout();
+    Future<FreeFormText> textFuture = text.layout();
 ```
-...
-```dart
-  Widget build(BuildContext context) {
-    return FutureBuilder<FreeFormText>(
-        future: textFuture,
-        builder: (BuildContext context, AsyncSnapshot<FreeFormText> snapshot) {
-          if (snapshot.hasData) {
-            return Center(
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                padding: EdgeInsets.zero,
-                margin: const EdgeInsets.all(20.0),
-                child: CustomPaint(
-                  painter: ExampleTextPainter(context, snapshot.data!),
-                ),
-              ),
-            );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        });
-  }
-```
-...
+Then paint it in a CustomPainter:
 ```dart
 class ExampleTextPainter extends CustomPainter {
-  BuildContext context;
   FreeFormText text;
-  ExampleTextPainter(this.context, this.text);
+  ExampleTextPainter(this.text);
   @override
   void paint(Canvas canvas, Size size) {
     var painter = FreeFormTextPainter(canvas);

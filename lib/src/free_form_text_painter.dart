@@ -77,7 +77,6 @@ class FreeFormTextPainter {
       [bool lenient = false]) {
     final pathLength = OffsetUtility.pathLength(path);
     final textLength = text.textLength();
-    var maxWidth = fetchMaxWidth(text.buffer);
     if (text.textLength() > pathLength) {
       if (!lenient) {
         throw FreeFormTextException('Text length exceeds path length');

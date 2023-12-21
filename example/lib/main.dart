@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:free_form_text/free_form_text.dart';
 
@@ -86,7 +87,7 @@ class _TextExampleState extends State<TextExample> {
                 padding: EdgeInsets.zero,
                 margin: const EdgeInsets.all(20.0),
                 child: CustomPaint(
-                  painter: ExampleTextPainter(context, snapshot.data!),
+                  painter: ExampleTextPainter(snapshot.data!),
                 ),
               ),
             );
@@ -98,9 +99,8 @@ class _TextExampleState extends State<TextExample> {
 }
 
 class ExampleTextPainter extends CustomPainter {
-  BuildContext context;
   FreeFormText text;
-  ExampleTextPainter(this.context, this.text);
+  ExampleTextPainter(this.text);
   @override
   void paint(Canvas canvas, Size size) {
     var painter = FreeFormTextPainter(canvas);
@@ -131,7 +131,9 @@ class ExampleTextPainter extends CustomPainter {
     try {
       painter.paintTextAlongPath(text, smoothPath);
     } on FreeFormTextException catch (e) {
-      print(e.reason);
+      if(kDebugMode) {
+        print(e.reason);
+      }
     }
   }
 
