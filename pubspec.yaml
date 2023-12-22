@@ -1,6 +1,6 @@
 name: free_form_text
-description: Library to implement painting styled, free form text to a Canvas.
-version: 0.4.3
+description: Styled, free form text painted to a Canvas at arbitrary angles and along a path
+version: 0.4.4
 homepage: https://github.com/badger3512/free_form_text
 issue_tracker: https://github.com/badger3512/free_form_text/issues
 environment:
