@@ -1,23 +1,23 @@
 name: free_form_text
 description: Styled, free form text painted to a Canvas at arbitrary angles and along a path
-version: 0.4.4
+version: 0.4.6
 homepage: https://github.com/badger3512/free_form_text
 issue_tracker: https://github.com/badger3512/free_form_text/issues
 environment:
-  sdk: '>=3.1.5 <4.0.0'
-  flutter: ">=1.17.0"
+  sdk: '>=3.1.3 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
   image: ^4.1.3
   path_provider: ^2.1.1
+  win32: ^5.10.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.1
+  flutter_lints: ^6.0.0
 
 
 # The following section is specific to Flutter packages.
 flutter:
-
+  uses-material-design: true

@@ -16,7 +16,7 @@ Text is styled with the [TextStyle](https://api.flutter.dev/flutter/dart-ui/Text
 To use this plugin, add `free_form_text` as a dependency in your pubspec.yaml file. For example:
 ```yaml
 dependencies:
-  free_form_text: '^0.4.1'
+  free_form_text: '^0.4.4'
 ```
 ## Usage
 

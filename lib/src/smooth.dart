@@ -48,17 +48,17 @@ class CubicBezier {
       vDistance[0] = vDistance[1];
       vDistance[1] = OffsetUtility.offsetDistance(v[1], v[2]);
 
-      double p = vDistance[0] / (vDistance[0] + vDistance[1]);
+      final p = vDistance[0] / (vDistance[0] + vDistance[1]);
       anchor = ui.Offset(mid[0].dx + p * (mid[1].dx - mid[0].dx),
           mid[0].dy + p * (mid[1].dy - mid[0].dy));
       double xDelta = anchor.dx - v[1].dx;
       double yDelta = anchor.dy - v[1].dy;
 
-      var ctx = ui.Offset(
+      final ctx = ui.Offset(
           alpha * (v[1].dx - mid[0].dx + xDelta) + mid[0].dx - xDelta,
           alpha * (v[1].dy - mid[0].dy + yDelta) + mid[0].dy - yDelta);
 
-      var cty = ui.Offset(
+      final cty = ui.Offset(
           alpha * (v[1].dx - mid[1].dx + xDelta) + mid[1].dx - xDelta,
           alpha * (v[1].dy - mid[1].dy + yDelta) + mid[1].dy - yDelta);
       l1.add(ctx);
@@ -107,11 +107,11 @@ class CubicBezier {
       double xDelta = anchor.dx - v[1].dx;
       double yDelta = anchor.dy - v[1].dy;
 
-      var ctx = ui.Offset(
+      final ctx = ui.Offset(
           alpha * (v[1].dx - mid[0].dx + xDelta) + mid[0].dx - xDelta,
           alpha * (v[1].dy - mid[0].dy + yDelta) + mid[0].dy - yDelta);
 
-      var cty = ui.Offset(
+      final cty = ui.Offset(
           alpha * (v[1].dx - mid[1].dx + xDelta) + mid[1].dx - xDelta,
           alpha * (v[1].dy - mid[1].dy + yDelta) + mid[1].dy - yDelta);
       l1.add(ctx);
@@ -131,7 +131,7 @@ class CubicBezier {
 //    final buf = List<ui.Offset>.filled(3, ui.Offset.zero);
     curve[0] = ui.Offset(start.dx, start.dy);
     curve[nv - 1] = ui.Offset(end.dx, end.dy);
-    var ip = _getInterpolationPoints(nv);
+    final ip = _getInterpolationPoints(nv);
 
     for (int i = 1; i < nv - 1; i++) {
       var dx = ip[i].t[0] * start.dx +
@@ -183,6 +183,9 @@ class CubicBezier {
   /// Creates a new line which is a smoothed version of the input.
   /// Handles open and closed paths
   List<ui.Offset> smooth(List<ui.Offset> coordinates, double alpha) {
+    if(coordinates.isEmpty){
+      return [];
+    }
     if (coordinates.first != coordinates.last) {
       return _smoothLine(coordinates, alpha);
     } else {
@@ -192,9 +195,9 @@ class CubicBezier {
 
   /// Creates a new line which is a smoothed version of the input.
   List<ui.Offset> _smoothLine(List<ui.Offset> ls, double alpha) {
-    var coordinates = ls;
+    final coordinates = ls;
 
-    var controlPoints = _getLineControlPoints(coordinates, alpha);
+    final controlPoints = _getLineControlPoints(coordinates, alpha);
 
     final int n = coordinates.length;
     List<ui.Offset> smoothCoordinates = List<ui.Offset>.empty(growable: true);
@@ -206,7 +209,7 @@ class CubicBezier {
         smoothCoordinates.add(ui.Offset(coordinates[i].dx, coordinates[i].dy));
       } else {
         int smoothN = control.numVertices;
-        var segment = _cubicBezier(coordinates[i], coordinates[i + 1],
+        final segment = _cubicBezier(coordinates[i], coordinates[i + 1],
             controlPoints[i][1], controlPoints[i + 1][0], smoothN);
 
         int copyN = i < n - 1 ? segment.length - 1 : segment.length;
@@ -224,7 +227,7 @@ class CubicBezier {
   List<ui.Offset> _smoothRing(List<ui.Offset> coordinates, double alpha) {
     final n = coordinates.length - 1;
 
-    var controlPoints = _getRingControlPoints(coordinates, n, alpha);
+    final controlPoints = _getRingControlPoints(coordinates, n, alpha);
 
     List<ui.Offset> smoothCoords = List<ui.Offset>.empty(growable: true);
     double dist;
@@ -236,7 +239,7 @@ class CubicBezier {
         smoothCoords.add(ui.Offset(coordinates[i].dx, coordinates[i].dy));
       } else {
         int smoothN = control.numVertices;
-        var segment = _cubicBezier(coordinates[i], coordinates[next],
+        final segment = _cubicBezier(coordinates[i], coordinates[next],
             controlPoints[i][1], controlPoints[next][0], smoothN);
 
         int copyN = i < n - 1 ? segment.length - 1 : segment.length;

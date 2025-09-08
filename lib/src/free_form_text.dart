@@ -33,15 +33,25 @@ class FreeFormText {
 
   /// Compute the length of the laid-out text string
   double textLength() {
-    double length = 0.0;
+    var length = 0.0;
     if (!_isBuilt) {
       return length;
     }
     for (StyledCharacter char in buffer) {
-      var spacing = char.mStyle.letterSpacing ?? 0.0;
+      final spacing = char.mStyle.letterSpacing ?? 0.0;
       length += (char.image!.width + spacing);
     }
     return length;
+  }
+
+  /// Compute the bounds for the laid-out text
+  math.Rectangle<double> textBounds(){
+    final width = textLength();
+    double height = -1.0;
+    for(StyledCharacter char in buffer){
+      height = math.max((char.image!.height.toDouble()),height);
+    }
+    return math.Rectangle(0.0,0.0,width,height);
   }
 
   /// Create a bit map image for the represented character
@@ -54,23 +64,23 @@ class FreeFormText {
     final tp =
         m.TextPainter(text: textSpan, textDirection: ui.TextDirection.ltr);
     tp.layout();
-    var width = tp.width;
-    var height = tp.height;
+    final width = tp.width;
+    final height = tp.height;
     tp.dispose();
-    var builder = ui.ParagraphBuilder(char.mStyle.getParagraphStyle());
+    final builder = ui.ParagraphBuilder(char.mStyle.getParagraphStyle());
     builder.pushStyle(char.style);
     builder.addText(str);
     ui.Paragraph paragraph = builder.build();
     paragraph.layout(const ui.ParagraphConstraints(width: 100));
     final recorder = ui.PictureRecorder();
-    var canvas = m.Canvas(recorder);
+    final canvas = m.Canvas(recorder);
     canvas.drawParagraph(paragraph, const ui.Offset(0.0, 0.0));
     final picture = recorder.endRecording();
     ui.Image res = await picture.toImage(width.toInt(), height.toInt());
-    ByteData? data = await res.toByteData(format: ui.ImageByteFormat.png);
-    var dir = await getApplicationDocumentsDirectory();
-    var file = io.File('${dir.path}/char_$str.png');
-    await file.writeAsBytes(data!.buffer.asUint8List());
+    // ByteData? data = await res.toByteData(format: ui.ImageByteFormat.png);
+    // final dir = await io.Directory.systemTemp;
+    // final file = io.File('${dir.path}/char_$str.png');
+    // await file.writeAsBytes(data!.buffer.asUint8List());
     return res;
   }
 }

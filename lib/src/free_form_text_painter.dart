@@ -35,13 +35,39 @@ class FreeFormTextPainter {
     canvas.translate(offset.dx, offset.dy);
     canvas.rotate(-angle * degrees2Radians);
     for (var i = 0; i < text.buffer.length; i++) {
-      var currentChar = text.buffer[i];
+      final currentChar = text.buffer[i];
       _paintCharacter(currentChar, currentOffset);
-      var spacing = currentChar.mStyle.letterSpacing ?? 0.0;
+      final spacing = currentChar.mStyle.letterSpacing ?? 0.0;
       currentOffset = currentOffset.translate(
           currentChar.image!.width.toDouble() + spacing, 0.0);
     }
     canvas.restore();
+  }
+
+  /// Determine maximum inter-character angle
+  double checkMaxAngle(FreeFormText text, List<ui.Offset> path) {
+    var maxAngle = -double.maxFinite;
+    final textLength = text.textLength();
+    final smoothPath = CubicBezier().smooth(path, 0.001);
+    final currentOffset = smoothPath[0];
+    var pathDistance =
+        OffsetUtility.distanceAlongPath(smoothPath, currentOffset);
+    for (var i = 0; i < text.buffer.length; i++) {
+      if (pathDistance <= textLength) {
+        ui.Offset? postOffset =
+            OffsetUtility.linearInterpolation2D(smoothPath, pathDistance);
+        if (postOffset != null) {
+          List<ui.Offset> bracketList =
+              OffsetUtility.bracketOffset(smoothPath, postOffset);
+          if (bracketList.isNotEmpty) {
+            var angle =
+                OffsetUtility.offsetAngle(bracketList[0], bracketList[1]);
+            maxAngle = math.max(angle.abs(), maxAngle);
+          }
+        }
+      }
+    }
+    return maxAngle;
   }
 
   /// Paint text along a specified path. Closed paths, e.g. first and last points are equal
@@ -50,18 +76,18 @@ class FreeFormTextPainter {
       [bool lenient = false]) {
     final pathLength = OffsetUtility.pathLength(path);
     final textLength = text.textLength();
-    if (text.textLength() > pathLength) {
+    if (text.textLength() > 1.05 * pathLength) {
       if (!lenient) {
         throw FreeFormTextException('Text length exceeds path length');
       }
     }
-    final smoothPath = CubicBezier().smooth(path, 0.05);
-    var currentOffset = smoothPath[0];
+    final smoothPath = CubicBezier().smooth(path, 0.001);
+    final currentOffset = smoothPath[0];
     var pathDistance =
         OffsetUtility.distanceAlongPath(smoothPath, currentOffset);
     for (var i = 0; i < text.buffer.length; i++) {
-      var currentChar = text.buffer[i];
-      if (pathDistance <= textLength) {
+      final currentChar = text.buffer[i];
+      if (pathDistance <= textLength*1.5) {
         ui.Offset? postOffset =
             OffsetUtility.linearInterpolation2D(smoothPath, pathDistance);
         if (postOffset != null) {
@@ -69,10 +95,14 @@ class FreeFormTextPainter {
               OffsetUtility.bracketOffset(smoothPath, postOffset);
           if (bracketList.isNotEmpty) {
             canvas.save();
-            final angle =
+            var angle =
                 OffsetUtility.offsetAngle(bracketList[0], bracketList[1]);
+
             canvas.translate(postOffset.dx, postOffset.dy);
             canvas.rotate(angle * degrees2Radians);
+            // if (kDebugMode) {
+            //   print('Painting: ${String.fromCharCode(currentChar.codePoint)}');
+            // }
             _paintCharacter(currentChar, const ui.Offset(0.0, 0.0));
             canvas.restore();
             final spacing = currentChar.mStyle.letterSpacing ?? 0.0;

@@ -14,7 +14,7 @@ class CharacterCache {
   /// Save a character to the cache.
   /// The hash is a combination of character codepoint and style hashcode.
   void put(StyledCharacter char) {
-    int hashCode = char.hashCode;
+    final hashCode = char.hashCode;
     if (map.isNotEmpty && map[hashCode] != null) {
       return;
     } else {

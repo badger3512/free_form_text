@@ -103,7 +103,7 @@ class ExampleTextPainter extends CustomPainter {
   ExampleTextPainter(this.text);
   @override
   void paint(Canvas canvas, Size size) {
-    var painter = FreeFormTextPainter(canvas);
+    final painter = FreeFormTextPainter(canvas);
     painter.paintText(
         text: text, offset: const Offset(50.0, 200.0), angle: 30.0);
     painter.paintText(

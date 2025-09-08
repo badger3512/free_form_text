@@ -1,6 +1,6 @@
 part of '../free_form_text.dart';
 
-const double degrees2Radians = math.pi / 180.0;
+const degrees2Radians = math.pi / 180.0;
 
 /// Stateless utility class implementing [Offset] operations
 class OffsetUtility {
@@ -14,13 +14,13 @@ class OffsetUtility {
     }
     var sum = 0.0;
     for (var i = 1; i < path.length; i++) {
-      var d = offsetDistance(path[i - 1], path[i]);
+      final d = offsetDistance(path[i - 1], path[i]);
       if (sum + d >= dist) {
-        var dx = path[i].dx - path[i - 1].dx;
-        var dy = path[i].dy - path[i - 1].dy;
-        var scale = (dist - sum) / d;
-        var x = path[i - 1].dx + scale * dx;
-        var y = path[i - 1].dy + scale * dy;
+        final dx = path[i].dx - path[i - 1].dx;
+        final dy = path[i].dy - path[i - 1].dy;
+        final scale = (dist - sum) / d;
+        final x = path[i - 1].dx + scale * dx;
+        final y = path[i - 1].dy + scale * dy;
         return ui.Offset(x, y);
       } else {
         sum += d;
@@ -31,8 +31,8 @@ class OffsetUtility {
 
   /// Compute the distance between to [Offset] points
   static double offsetDistance(ui.Offset p1, ui.Offset p2) {
-    var dx = p2.dx - p1.dx;
-    var dy = p2.dy - p1.dy;
+    final dx = p2.dx - p1.dx;
+    final dy = p2.dy - p1.dy;
     return math.sqrt(dx * dx + dy * dy);
   }
 
@@ -82,8 +82,8 @@ class OffsetUtility {
 
   /// Compute the angle between two points
   static double offsetAngle(ui.Offset p1, ui.Offset p2) {
-    var dx = p2.dx - p1.dx;
-    var dy = p2.dy - p1.dy;
+    final dx = p2.dx - p1.dx;
+    final dy = p2.dy - p1.dy;
     return math.atan2(dy, dx) / degrees2Radians;
   }
 
@@ -93,7 +93,7 @@ class OffsetUtility {
     if (offset == path[0]) {
       return sum;
     }
-    var bracketIndex = bracketOffsetIndex(path, offset);
+    final bracketIndex = bracketOffsetIndex(path, offset);
     if (bracketIndex.isEmpty) {
       return sum;
     }
